@@ -2,17 +2,23 @@ pragma solidity ^0.5.0;
 
 
 interface QuestInterface{
-    function getQuestName() pure external returns (string memory name);
-    function getStepInfo(address hacker) view external returns (string memory url);
-    function questComplete(address instance) external returns (bool complete);
-    function beginQuest(address hacker) external returns (address stepAddress); //only usable by score engine
-    function spawnNextStep(address hacker) external returns (address stepAddress);
+    function getQuestName() external pure returns (string memory name);
+    function getStepInfo() external view returns (string memory url);
+    function isQuestComplete() external returns (bool complete);
+    function beginQuest(address hacker) external returns (bool success); //only usable by score engine
+    function spawnStep(address hacker) external returns (address stepAddress);
     function stepsRemaining(address hacker) external view returns (uint steps);
+    function testStep(address step) external returns (bool);
+}
+
+interface StepInterface{
+    function getHacker() external view returns (address);
 }
 
 contract QuestTemplate is QuestInterface{
     address scoringEngine;
     mapping (address => uint) hackerStep;
+    mapping (address => address) hackerContract;
     uint constant maxSteps = 1;
 
     modifier onlyScoring(){
@@ -31,21 +37,44 @@ contract QuestTemplate is QuestInterface{
         return stepInfo(hackerStep[msg.sender]);
     }
 
-    //uses msg.sender to determine hacker and step
-    function questComplete(address instance) external returns (bool){
+    function isQuestComplete(address hacker) external returns (bool){
+        if(hackerStep[hacker] > maxSteps){
+            return true;
+        }
         return false;
     }
 
-    function beginQuest(address hacker) external onlyScoring() returns (address) {
-        require(hackerStep[hacker] == 0, "Quest already started/complete");
+    function beginQuest(address hacker) external onlyScoring() returns (bool) {
+        require(hackerStep[hacker] == 0, "Quest already been started or is complete");
         hackerStep[hacker] = 1;
+        //todo spawn child
+        //set hackerContract
+        return true;
     }
-    //uses msg.sender to determine hacker. Returns 0 address if previous step not complete, or no more steps
-    function spawnNextStep() external returns (address stepAddress){
-        
+
+    //uses msg.sender to determine hacker.  Spawns new version of current step contract as fresh default one
+    //for if the hacker fails in an unrecoverable way and needs to reset the state of the step
+    function spawnStep() external returns (address stepAddress){
+        require(hackerStep[msg.sender] > 0, "Quest has not been started");
+        require(hackerStep[msg.sender] < maxSteps, "Quest is already complete");
+        //spawn child, then update hackerContract to new address
     }
+
     function stepsRemaining(address hacker) external view returns (uint){
-        return 0;
+        return maxSteps - hackerStep[hacker];
+    }
+
+    function testStep(address step) external returns (bool){
+        bool success = false;
+
+        // ... magic
+
+        if(success){
+            //update to new step etc
+            hackerStep[msg.sender] += 1;
+            hackerContract[msg.sender] = address(0);
+        }
+        return success;
     }
 
     //private functions
@@ -59,3 +88,9 @@ contract QuestTemplate is QuestInterface{
         }
     }
 }
+
+
+
+
+
+
