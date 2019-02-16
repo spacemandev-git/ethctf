@@ -18,9 +18,10 @@ contract QuestTemplate is QuestInterface{
     uint constant maxSteps = 1;
 
     modifier onlyScoring(){
-        require(scoringEngine == msg.sender, "can only be called from scoring engine");
+        require(scoringEngine == msg.sender, "Can only be called from scoring engine");
         _;
     }
+
     constructor(address scoringEngine_) public {
         scoringEngine = scoringEngine_;
     }
@@ -28,7 +29,9 @@ contract QuestTemplate is QuestInterface{
     function getQuestName() external pure returns (string memory name){
         return "Template Quest";
     }
+
     //uses msg.sender to determine hacker and step
+    //this makes it so no one can peak ahead by following other hacker addresses (without reverse engineering)
     function getStepInfo() external view returns (string memory url){
         return stepInfo(hackerStep[msg.sender]);
     }
@@ -53,7 +56,6 @@ contract QuestTemplate is QuestInterface{
     function spawnStep() external returns (address){
         require(hackerStep[msg.sender] > 0, "Quest has not been started");
         require(hackerStep[msg.sender] < maxSteps, "Quest is already complete");
-        //spawn child, then update hackerContract to new address
         return spawnStepInternal(hackerStep[msg.sender], msg.sender);
     }
 
@@ -62,12 +64,11 @@ contract QuestTemplate is QuestInterface{
     }
 
     function testStep() external returns (bool){
-        require(hackerStep[msg.sender] > 0, "quest not started");
-        require(hackerStep[msg.sender] <= maxSteps, "quest already complete");
+        require(hackerStep[msg.sender] > 0, "Quest not started");
+        require(hackerStep[msg.sender] <= maxSteps, "Quest is already complete");
         require(hackerContract[msg.sender] != address(0), "No step spawned");
         bool success = false;
 
-        // ... magic
         if(hackerStep[msg.sender] == 1){
             success = testStep1(hackerContract[msg.sender]);
         }else{
@@ -75,7 +76,6 @@ contract QuestTemplate is QuestInterface{
         }
 
         if(success){
-            //update to new step etc
             hackerStep[msg.sender] += 1;
             hackerContract[msg.sender] = address(0);
         }
@@ -83,26 +83,29 @@ contract QuestTemplate is QuestInterface{
     }
 
     //private functions
+
     function testStep1(address step) internal view returns (bool){
         StepTemplate s = StepTemplate(step);
         return !s.test();
     }
+
     function stepInfo(uint step) internal pure returns (string memory){
         if(step == 0){
             return "Quest not started";
         }else if(step == 1){
-            return "Template Quest First Step Info URL";
+            return "Make the 'test' function return false";
         }else{
             return "Invalid Quest Step";
         }
     }
+
     function spawnStepInternal(uint step, address hacker) internal returns (address){
-        require(step > 0, "quest not started");
+        require(step > 0, "Quest not started");
         require(step < maxSteps, "quest already complete");
         if(step == 1){
             return hackerContract[hacker] = address(new StepTemplate(hacker));
         }else{
-            revert("should be impossible"); //shouldn't reach here
+            revert("should be impossible");
         }
     }
 }
