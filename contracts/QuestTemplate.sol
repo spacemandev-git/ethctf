@@ -4,13 +4,13 @@ pragma solidity ^0.5.0;
 interface QuestInterface{
     function getQuestName() external pure returns (string memory name);
     function getStepInfo() external view returns (string memory url);
-    function isQuestComplete() external view returns (bool complete);
+    function isQuestComplete(address hacker) external view returns (bool complete);
     function beginQuest(address hacker) external returns (bool success); //only usable by score engine
-    function spawnStep(address hacker) external returns (address stepAddress);
+    function spawnStep() external returns (address stepAddress);
     function stepsRemaining(address hacker) external view returns (uint steps);
-    function testStep(address step) external returns (bool);
+    function testStep() external returns (bool);
+    function getStep() external view  returns (address step);
 }
-
 contract QuestTemplate is QuestInterface{
     address scoringEngine;
     mapping (address => uint) hackerStep;
@@ -82,6 +82,10 @@ contract QuestTemplate is QuestInterface{
         return success;
     }
 
+    function getStep() external view returns (address step){
+        return hackerContract[msg.sender];
+    }
+
     //private functions
 
     function testStep1(address step) internal view returns (bool){
@@ -101,7 +105,7 @@ contract QuestTemplate is QuestInterface{
 
     function spawnStepInternal(uint step, address hacker) internal returns (address){
         require(step > 0, "Quest not started");
-        require(step < maxSteps, "quest already complete");
+        require(step <= maxSteps, "quest already complete");
         if(step == 1){
             return hackerContract[hacker] = address(new StepTemplate(hacker));
         }else{
