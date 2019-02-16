@@ -40,7 +40,7 @@ contract ScoringEngine{
   event QuestCompleted(uint indexed questID, address indexed hacker);
   event DeployedContract(uint indexed _questID, address indexed deployedFor, string description, address contractAddress, string contractSource);
   event RequestQuest(uint indexed _questID, address indexed hacker);
-  event QuestDeployed(uint indexed _questID, address indexed hacker);
+  event QuestDeployed(uint indexed _questID, address indexed hacker, address rootContractInstance);
 
   constructor() public {
     owner = msg.sender;
@@ -166,8 +166,8 @@ contract ScoringEngine{
     emit DeployedContract(_questID, deployedFor, description, contractAddress, contractSource);
   } 
 
-  function questDeployFinished(uint256 _questID, address deployedFor) public{
-    emit QuestDeployed(_questID, deployedFor);
+  function questDeployFinished(uint256 _questID, address deployedFor, address rootContractInstance) public{
+    emit QuestDeployed(_questID, deployedFor, rootContractInstance);
   } 
 
 }
