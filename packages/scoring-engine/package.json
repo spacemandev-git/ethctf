@@ -28,9 +28,13 @@
   "devDependencies": {
     "@types/node": "^11.9.4",
     "@types/webpack": "^4.4.24",
+    "js-yaml": "^3.12.1",
     "truffle": "^5.0.4",
     "typescript": "^3.3.3",
     "webpack": "^4.29.4",
     "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "bn.js": "^4.11.8"
   }
 }
