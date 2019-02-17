@@ -1,0 +1,1 @@
+[{"constant":false,"inputs":[{"name":"step","type":"uint256"},{"name":"instance","type":"address"}],"name":"testStep","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]

@@ -1,0 +1,1 @@
+[{"constant":true,"inputs":[],"name":"getHacker","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"id","type":"uint256"}],"name":"getStepContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"}]

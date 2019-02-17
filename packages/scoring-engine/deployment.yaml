@@ -1,0 +1,9 @@
+quests:
+  # - id: 1
+  #   package: ./quests/XPLToken
+  #   prerequisites: []
+  #   reward: 10
+  - id: 2
+    package: ./quests/BadPhish
+    prerequisites: []
+    reward: 20

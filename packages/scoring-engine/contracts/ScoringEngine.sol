@@ -7,11 +7,11 @@ pragma solidity >=0.5.0 <=0.6.0;
 import "./NFTStore.sol";
 
 interface QuestInterface{
-  function getQuestName() external pure returns (string memory name);
-  function getStepInfo(uint step) external pure returns (string memory url);
-  function deployStep(uint step) external returns (address _step);
+//  function getQuestName() external pure returns (string memory name);
+//  function getStepInfo(uint step) external pure returns (string memory url);
+//  function deployStep(uint step) external returns (address _step);
   function testStep(uint step, address rootQuestInstance) external returns (bool);
-  function stepMaxCount() external pure returns (uint);
+//  function stepMaxCount() external pure returns (uint);
 }
 
 contract ScoringEngine{
