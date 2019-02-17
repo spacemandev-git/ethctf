@@ -1,0 +1,21 @@
+# Meta
+
+* Level: 1
+* Name: BadPhish
+* Steps 1
+
+## Step 1 Contracts
+
+* Phisher.sol
+
+# Step description
+
+BadPhish is a pyramid style financial game where users deposit ETH in exchange for "tries". Tries are rewarded as a ratio of ten times how much the deposit is vs the balance of the contract (including the deposit). Thus, the first deposit is always rewarded with 10 tries, and no deposit can ever generate more than 10 tries. . With a try, a user is capable of using the `goPhish` function. This function will use state of the art on-chain randomization in order to pick a random "bag" of money and give it to the user. There are 10 bags, and deposits are split evenly between each bag, with the 7th bag storing any remainder funds and thus being a slight bonus. The game's design encourages users to deposit ETH into the game early for more tries for less money. After several more deposits, the early user can then use their tries to attempt to win more coins than they spent for tries. 
+
+## Hint
+
+There is a slight bug or two. The sanityCheck function was added in order to detect it, but the development team is thus far unaware of what is causing it. The development team, as a workaround, rebrands and deploys a fresh version of the contract each time the state is corrupted.
+
+# Exploit description
+
+The contract is vulnerable to a simple reentrancy bug. The exploit code in the Step1Test.sol file will always drain the contract as much as possible in a single transaction by continually calling `goPhish` to use the same "bag" value before it is decremented and before the number of tries for the user is decremented. 
