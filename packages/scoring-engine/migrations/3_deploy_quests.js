@@ -2,42 +2,38 @@ const BN = require('bn.js');
 const yaml = require('js-yaml');
 const path = require('path');
 const fs = require('fs');
+const solc = require('solc');
+const contract = require('truffle-contract');
 
 var ScoringEngine = artifacts.require("./ScoringEngine.sol");
 var DeploymentConfigPath = path.resolve(__dirname,'../');
 var DeploymentConfig = yaml.safeLoad(fs.readFileSync(path.join(DeploymentConfigPath, 'deployment.yaml'), 'utf8'));
 
 module.exports = function (deployer) {
-    var scoringEngineInstance = await ScoringEngine.deployed();
+    var scoringEngineInstance = ScoringEngine.deployed();
     var quests = DeploymentConfig.quests || [];
-    quests.forEach((quest)=>{
-        fs.exists(path.resolve(DeploymentConfigPath, quest.package, './quest.yaml'),()=>{
-            var questConfig = yaml.safeLoad(path.resolve(DeploymentConfigPath, 'deployment.yaml'));
-            var questConfig = yaml.safeLoad(fs.readFileSync(path.join(DeploymentConfigPath, 'deployment.yaml'), 'utf8'));
-Object.assign({}, )
-        })
-        quest.package
-        scoringEngineInstance.addQuest(
-            new BN(quest.id),
+    quests.forEach((questDeployment)=>{
+        var manifestPath = path.resolve(DeploymentConfigPath, questDeployment.package, './manifest.yaml');
+        var questContract = { abi: JSON.parse(
+            fs.readFileSync(path.resolve(DeploymentConfigPath, questDeployment.package, './Quest.abi')
+        ))};
+        // create quest contract
+        const QuestContract = contract(questContract);
+        QuestContract
+            .setProvider(web3.currentProvider);
 
+            var questManifest = yaml.safeLoad(fs.readFileSync(manifestPath, 'utf8'));
 
-        )
+            var instance = QuestContract.new(); 
+            deployer.deploy(QuestContract).then(()=>{
+                scoringEngineInstance.addQuest(
+                    new BN(questDeployment.id),
+                    instance.address,
+                    new BN(questManifest.steps.length),
+                    [],
+                    new BN(questDeployment.reward)
+                );
+            })
     });
-    scoringEngineDeployment.then(
-        function () {
-            //ScoringEngine.address;
-            var scoringEngineInstance = await ScoringEngine.at(ScoringEngine.address);
-            scoringEngineInstance.addQuest.transaction(new BN(1), _questContract, uint256 _steps, uint256[] memory _questPreReqs, uint256 _questReward)
-        }
-    );
-    scoringEngineDeployment.then(
-        function () {
-            //ScoringEngine.address;
-            var scoringEngineInstance = await ScoringEngine.at(ScoringEngine.address);
-            scoringEngineInstance.addQuest.transaction
-            (new BN(2), _questContract, uint256 _steps, 
-            uint256[] memory _questPreReqs, uint256 _questReward)
-        }
-    );
     //TODO: update deploy service address
 };
