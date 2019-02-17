@@ -4,6 +4,6 @@ quests:
      prerequisites: []
      reward: 10
   - id: 2
-    package: ./contracts/quests/BadPhish
-    prerequisites: []
-    reward: 20
+     package: ./contracts/quests/BadPhish
+     prerequisites: []
+     reward: 20
