@@ -1,0 +1,22 @@
+---
+QuestName: XPLToken
+Level: 1
+Steps: 1
+
+StepContracts:
+  - 
+    - XPLToken.sol
+
+StepDescriptions:
+  - |
+    XPLToken is a simple token contract which is designed to encourage hackers to go outside and talk to people in order to accumulate coins so that they can be a winner. A lot of coins are required, so this may take a very long time. 
+
+    Coins are initially brought into the ecosystem by using a Fibonacci PoW system. Unfortunately, unlike hashes, it's completely impossible to determine what the number is without computing it. So there is an efficient Fibonacci solver implemented in the contract. You must send the "claimPayout" function a sequence number and the matching Fibonacci number matching that sequence number.
+
+    Become a winner in order to complete this quest by having your address with the "testWinner" function return true with your address. 
+
+
+Hints:
+  - |
+    The Fibonacci PoW system is apparently slightly flawed. The version implemented in the contract is much too slow. However, there has also been some reports that large sequence numbers can cause weird behavior. The development team is currently on temporary leave due to crowdsale prices, but one off-duty developer wrote a paper about integer underflow which references YPLToken as their example. The name isn't the same, but it is slightly suspicious. 
+
