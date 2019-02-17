@@ -14,6 +14,23 @@ Because of it's modular nature, one could simply deploy a Quest package and atte
 ## Quest Packages
 A self contained template for multi-step exploit checks. Users can try to break the contract or submit zero knowledge flags for off chain steps (breaking into a lockbox, hacking a server, etc) then run the test contract to see if they achieved all the exploits in the contract.
 
+A quest package is a folder that has the following items:
+### Manifest
+The Manifest file contains metadata about the quest, such as how many steps it has, what the reward is for completing it, what it's ID is, what pre reqs it has etc. It's consumed by the QPS when trying to figure out how best to deploy the quest instance for a given player. 
+
+### Test Contract
+The Test Contract is a solidity contract that implements the QuestInterface. 
+It has a series of steps that can be used to check if the contract has been exploited or not. These steps can also be zero knowledge flag submission or otherwise off chain vulnerabilities to compound different steps into one 'Quest'.
+
+An example of an easy 'teaching' quest might only have one step and work to find an easy integer overflow/underflow error in an otherwise short contract. A medium
+
+An example of a medium 'challenge' quest might have three to five steps, requiring you (step 1) kill a contract library, (step 2) drain contract, (step 3) use the funds to attack another contract, and (step 4) override the connecing link between the two contracts. 
+
+An example of a challening quest might be (step 1) break a lockbox, (step 2) hack into a server, (step 3) deploy your own contract to attack the original vulnerable contracts, tec. 
+
+### Vulnerable Contracts
+A list of vulnerable contracts and their inital state that the Deploy Service should set them up as. 
+
 ## Quest Provisioning System:
 QPS is an optional off chain deploy service that listens to Scoring Engine events to see when a user wants to start a given quest. An instance of that quest's vulnerable contracts are then deployed and locked so only that user can attack them. It uses Graph QL to listen to the events and pull and read quest package data.
 
