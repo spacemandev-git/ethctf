@@ -13,6 +13,21 @@ interface RootQuestInstance{
     function getHacker() external view returns (address);
 }
 
+contract RootInstance{
+  address hacker;
+  address[] contracts;
+  constructor(address hacker_, address[] memory contracts_) public{
+    hacker = hacker_;
+    contracts = contracts_;
+  }
+  function getStepContract(uint id) external view returns (address){
+    require(id < contracts.length);
+    return contracts[id];
+  }
+  function getHacker() external view returns (address){
+    return hacker;
+  }
+}
 
 contract ScoringEngine{
 
@@ -109,6 +124,7 @@ contract ScoringEngine{
       require(quests[i].progressByPlayer[msg.sender] > quests[i].steps, "A quest pre req is not finished");
     }
 
+    quests[_questID].progressByPlayer[msg.sender] = 1;
     // launch player quest // TODO: REQUEST CONTRACT DEPLOYMENT BY ORACLE
     //address vulnerableContract = quests[_questID].contractAddress.deployStep(1, msg.sender); //deploy first step for hacker
     //emit QuestStarted(_questID, msg.sender, vulnerableContract)
