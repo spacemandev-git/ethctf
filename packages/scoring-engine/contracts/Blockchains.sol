@@ -107,6 +107,10 @@ contract Blockchains{
       blockchainsById[chainID].lastBlockNum
     );
   }
+  function getNextBlockAvailable(uint256 chainID) public view chainExists(chainID)
+  returns(int blocknumber) {
+    blocknumber = int(blockchainsById[chainID].lastBlockNum) + int(blockchainsById[chainID].baseMineSpeed) + getChainMineModifier(chainID);
+  }
 
   function getChainMineModifier(uint256 chainID) public view chainExists(chainID) returns(int mod){
     mod = int(blockchainsById[chainID].difficulty) - int(blockchainsById[chainID].computationPower); 
