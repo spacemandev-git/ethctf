@@ -1,9 +1,9 @@
 quests:
-   - id: 1
-     package: ./contracts/quests/XPLToken
-     prerequisites: []
-     reward: 10
+  - id: 1
+    package: ./contracts/quests/XPLToken
+    prerequisites: []
+    reward: 10
   - id: 2
-     package: ./contracts/quests/BadPhish
-     prerequisites: []
-     reward: 20
+    package: ./contracts/quests/BadPhish
+    prerequisites: []
+    reward: 20
