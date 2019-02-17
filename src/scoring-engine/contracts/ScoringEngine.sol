@@ -5,11 +5,12 @@ pragma solidity >=0.5.0 <=0.6.0;
 //blockchain interface
 
 interface QuestInterface{
-  function getQuestName() external pure returns (string memory name);
-  function getStepInfo(uint step) external pure returns (string memory url);
-  function deployStep(uint step) external returns (address _step);
-  function testStep(uint step, address rootQuestInstance) external returns (bool);
-  function stepMaxCount() external pure returns (uint);
+  function testStep(uint step, RootQuestInstance instance) external returns (bool);
+}
+
+interface RootQuestInstance{
+    function getStepContract(uint id) external view returns (address);
+    function getHacker() external view returns (address);
 }
 
 
@@ -117,7 +118,7 @@ contract ScoringEngine{
 
   function testCurrentStep(uint256 _questID, address _rootQuestInstance) doesQuestExist(_questID) isQuestInProgress(_questID) public returns(bool success){
     //increment progress
-    if(quests[_questID].contractAddress.testStep(quests[_questID].progressByPlayer[msg.sender], _rootQuestInstance)){
+    if(quests[_questID].contractAddress.testStep(quests[_questID].progressByPlayer[msg.sender], RootQuestInstance(_rootQuestInstance))){
       quests[_questID].progressByPlayer[msg.sender]++;
       return true;
       emit NewQuestProgress(_questID, msg.sender, quests[_questID].progressByPlayer[msg.sender]);

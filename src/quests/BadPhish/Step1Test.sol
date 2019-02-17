@@ -1,11 +1,24 @@
 pragma solidity ^0.5.4;
 
-contract BadPhishQuest{
-    //....
-    function step1Test(PhisherMan phisher, address hacker) internal returns (bool){
+interface QuestInterface{
+  function testStep(uint step, RootQuestInstance instance) external returns (bool);
+}
+interface RootQuestInstance{
+    function getStepContract(uint id) external view returns (address);
+    function getHacker() external view returns (address);
+}
+
+contract BadPhishQuest is QuestInterface{
+    function testStep(uint step, RootQuestInstance instance) external returns (bool){
+        PhisherMan p = PhisherMan(instance.getStepContract(0));
+        return step1Test(p);
+    }
+    function step1Test(PhisherMan phisher) internal returns (bool){
         return !phisher.sanityCheck();
     }
 }
+
+
 
 //exploiter
 contract DeepPhisher{
