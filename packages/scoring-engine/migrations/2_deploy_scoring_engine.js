@@ -1,22 +1,12 @@
 const BN = require('bn.js');
+const Yaml = require('js-yaml');
+const Path = require('path')
 
 var ScoringEngine = artifacts.require("./ScoringEngine.sol");
+var DeploymentConfigPath = Path
+var DeploymentConfig = Yaml.safeLoad(__dirname,'../deployment.yaml');
 
 module.exports = function (deployer) {
     var scoringEngineDeployment = deployer.deploy(ScoringEngine);
-    scoringEngineDeployment.then(
-        function () {
-            //ScoringEngine.address;
-            var scoringEngineInstance = await ScoringEngine.at(ScoringEngine.address);
-            scoringEngineInstance.addQuest.transaction(new BN(1), _questContract, uint256 _steps, uint256[] memory _questPreReqs, uint256 _questReward)
-        }
-    );
-    scoringEngineDeployment.then(
-        function () {
-            //ScoringEngine.address;
-            var scoringEngineInstance = await ScoringEngine.at(ScoringEngine.address);
-            scoringEngineInstance.addQuest.transaction(new BN(2), _questContract, uint256 _steps, uint256[] memory _questPreReqs, uint256 _questReward)
-        }
-    );
     //TODO: update deploy service address
 };
