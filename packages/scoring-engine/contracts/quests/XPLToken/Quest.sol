@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+import "./XPLToken.sol";
 
 interface QuestInterface{
   function testStep(uint step, RootQuestInstance instance) external returns (bool);
