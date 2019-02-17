@@ -18,6 +18,8 @@
     "url": "git+https://github.com/Brownie79/ethctf.git"
   },
   "scripts": {
+    "truffle:compile": "truffle compile",
+    "truffle:migrate": "truffle migrate",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@types/node": "^11.9.4",
     "@types/webpack": "^4.4.24",
+    "truffle": "^5.0.4",
     "typescript": "^3.3.3",
     "webpack": "^4.29.4",
     "webpack-cli": "^3.2.3"
