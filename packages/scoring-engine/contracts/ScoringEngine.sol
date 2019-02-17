@@ -4,6 +4,8 @@ pragma solidity >=0.5.0 <=0.6.0;
 //vulnerability contract
 //blockchain interface
 
+import "./NFTStore.sol";
+
 interface QuestInterface{
   function getQuestName() external pure returns (string memory name);
   function getStepInfo(uint step) external pure returns (string memory url);
@@ -11,7 +13,6 @@ interface QuestInterface{
   function testStep(uint step, address rootQuestInstance) external returns (bool);
   function stepMaxCount() external pure returns (uint);
 }
-
 
 contract ScoringEngine{
 
@@ -28,7 +29,7 @@ contract ScoringEngine{
   mapping(uint256 => address) blockchains; //blockchainID => address of the blockchain contract
   address owner; 
   address payable deployWallet;
-  address assetShop; //replace with AssetShop interface type
+  NFTStore assetShop; //replace with AssetShop interface type
   address mutations; //replace with Mutations type 
 
   mapping(address => uint256) ethWallet; //used to deploy contracts
@@ -68,6 +69,10 @@ contract ScoringEngine{
 
   function setDeployServiceWalletAddress(address payable _deployWallet) isOwner() public {
     deployWallet = _deployWallet;
+  }
+
+  function setAssetStore(NFTStore store) isOwner() public {
+    assetShop = store;
   }
 
 
@@ -126,14 +131,17 @@ contract ScoringEngine{
     }
   }
 
-  //TODO: Award Coins to player (requires Bank)
   function completeQuest(uint256 _questID) isQuestInProgress(_questID) public {
     //check quest steps to see if it's higher than total steps
     require(quests[_questID].progressByPlayer[msg.sender] > quests[_questID].steps, "Not all steps completed");
     //award points to player
     leaderboard[msg.sender] += quests[_questID].rewardPoints; //should probably safe math all of this later
-    //TODO: award coins to player
     emit QuestCompleted(_questID, msg.sender);
+    //TODO: award coins to player
+    if(assetShop.cExists()){
+      assetShop.rewardCoinsToPlayer(msg.sender, quests[_questID].rewardPoints);
+    }  
+
   }  
 
   function depositIntoWallet() payable public returns (uint256 newBalance){

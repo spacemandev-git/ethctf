@@ -8,8 +8,8 @@ contract NFTStore{
   mapping(address => uint256) playerCoins; 
   uint256[] internal allAssetIDs; //maintains tokenId list
   mapping(uint256 => Asset) assetsById; 
-  address owner; //should and can be a Scoring Engine normally, but also fine as a person for modularity
-
+  address public owner; //should and can be a Scoring Engine normally, but also fine as a person for modularity
+  bool exists;
   struct Asset{
     string name;
     string description;
@@ -42,7 +42,9 @@ contract NFTStore{
   // FUNCTIONS \\
   constructor() public{
     owner = msg.sender;
+    exists = true;
   }
+  function cExists() public view returns(bool) {return exists;}
   function updateOwner(address newOwner) public isOwner() {
     owner = newOwner;
   }
