@@ -14,6 +14,22 @@ interface QuestInterface{
 //  function stepMaxCount() external pure returns (uint);
 }
 
+contract RootInstance{
+  address hacker;
+  address[] contracts;
+  constructor(address hacker_, address[] memory contracts_) public{
+    hacker = hacker_;
+    contracts = contracts_;
+  }
+  function getStepContract(uint id) external view returns (address){
+    require(id < contracts.length);
+    return contracts[id];
+  }
+  function getHacker() external view returns (address){
+    return hacker;
+  }
+}
+
 contract ScoringEngine{
 
   struct Quest{
